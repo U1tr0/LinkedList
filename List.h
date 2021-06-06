@@ -71,6 +71,10 @@ public:
 
 	size_t size() const;
 	void clear();
+
+	void forEach(void (*fn)(ValueType&));
+	void map(ValueType (*fn)(ValueType));
+	void filter(bool (*fn)(ValueType));
 private:
 	Node*	_head;
 	size_t	_size;

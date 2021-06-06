@@ -133,6 +133,7 @@ void LinkedList::insertAfterNode(Node* node, const ValueType& value) {
 void LinkedList::pushBack(const ValueType& value) {
 	if(_size == 0) {
         _head = new Node(value, _head);
+        _size++;
 	}
 	else {
         insert(_size, value);
@@ -318,5 +319,43 @@ LinkedList::Iterator LinkedList::begin() {
 
 LinkedList::Iterator LinkedList::end() noexcept {
     return Iterator(nullptr, -1);
+}
+
+void LinkedList::forEach(void (*fn)(ValueType&)){
+    Node* temp = _head;
+    while(temp) {
+        fn(temp->_value);
+        temp = temp->_next;
+    }
+}
+
+void LinkedList::map(ValueType (*fn)(ValueType)) {
+    Node* temp = _head;
+    while(temp) {
+        temp->_value = fn(temp->_value);
+        temp = temp->_next;
+    }
+}
+
+void LinkedList::filter(bool (*fn)(ValueType)) {
+	Node* temp = _head;
+	Node* prev = nullptr;
+	while (temp) {
+		if (!fn(temp->_value)) {
+			if (!prev) {
+				this->removeFront();
+				temp = _head;
+			}
+			else {
+				prev->_next = temp->_next;
+				delete temp;
+				temp = temp->_next;
+			}
+		}
+		else {
+			prev = temp;
+			temp = temp->_next;
+		}
+	}
 }
 
